@@ -1,0 +1,22 @@
+﻿@page "/"
+
+@inject HttpClient Http
+
+@using SecretSantaTest.Shared
+
+<div class="row justify-content-center">
+    <img class="rounded-circle mb-4" src="GuendaSecretSanta.png" />
+</div>
+
+<div class="row">
+    <FriendSelection FriendList="Friends" />
+</div>
+
+@code {
+    private FriendPresent[] Friends;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Friends = await Http.GetFromJsonAsync<FriendPresent[]>("/api/GetAllFriends");
+    }
+}

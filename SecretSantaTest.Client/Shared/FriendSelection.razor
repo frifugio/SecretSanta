@@ -1,0 +1,68 @@
+﻿@inject HttpClient Http
+
+@using SecretSantaTest.Shared
+
+<div class="container">
+    <div class="row justify-content-center">
+        <EditForm Model="@choosenFriend" OnValidSubmit="OnValidSubmit" class="form-inline">
+            <label class="sr-only" for="inlineFormInputName2">Nome</label>
+            <InputText @bind-Value="choosenFriend.Name" class="form-control mb-2 mr-sm-2" id="Nome" placeholder="Nome" />
+
+            <label class="sr-only" for="inlineFormInputGroupUsername2">PIN</label>
+            <div class="input-group mb-2 mr-sm-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">#</div>
+                </div>
+                <InputText @bind-Value="choosenFriend.PIN" class="form-control" id="PIN" placeholder="PIN" />
+            </div>
+
+            <button type="submit" class="btn btn-success mb-2">Who's my Santa?'</button>
+        </EditForm>
+    </div>
+
+    <div class="row justify-content-center mt-4" >
+        <h1 style="font-family: 'Corinthia', sans-serif; font-size: 100px; font-weight:bolder ">Il tuo Secret Santa è: @secretSantaFriend</h1>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public FriendPresent[] FriendList { get; set; }
+
+    FriendPresent choosenFriend = new();
+    string secretSantaFriend = string.Empty;
+    string newPin = string.Empty;
+
+    private async void OnValidSubmit(EditContext editContext)
+    {
+        var dbFriend = FriendList.FirstOrDefault(f => f.Name == choosenFriend.Name);
+
+        if(dbFriend != null)
+        {
+            if (!string.IsNullOrEmpty(dbFriend.SecretFriend))
+            {
+                if (choosenFriend.PIN == dbFriend.PIN)
+                    secretSantaFriend = dbFriend.SecretFriend;
+                else
+                    secretSantaFriend = "PIN non valido!";
+            }
+            else
+            {
+                var random = new Random();
+                int index = 0;
+                int findIndex = Array.FindIndex(FriendList, f => f.Name == dbFriend.Name);
+                do
+                {
+                    index = random.Next(0, FriendList.Length);
+                }
+                while (index == findIndex);
+
+                newPin = random.Next(0, 9999).ToString("D4");
+                secretSantaFriend = FriendList[index].Name;
+                dbFriend.SecretFriend = secretSantaFriend;
+                dbFriend.PIN = choosenFriend.PIN = newPin;
+
+                await Http.PutAsJsonAsync<FriendPresent>($"/api/UpdateFriend/{dbFriend.Id}", dbFriend);
+            }
+        }
+    }
+}
