@@ -5,8 +5,8 @@
 <div class="container">
     <div class="row justify-content-center">
         <EditForm Model="@choosenFriend" OnValidSubmit="OnValidSubmit" class="form-inline">
-            <label class="sr-only" for="inlineFormInputName2">Nome</label>
-            <InputText @bind-Value="choosenFriend.Name" class="form-control mb-2 mr-sm-2" id="Nome" placeholder="Nome" />
+            <label class="sr-only" for="inlineFormInputName2">Name</label>
+            <InputText @bind-Value="choosenFriend.Name" class="form-control mb-2 mr-sm-2" id="Name" placeholder="Name" />
 
             <label class="sr-only" for="inlineFormInputGroupUsername2">PIN</label>
             <div class="input-group mb-2 mr-sm-2">
@@ -16,12 +16,12 @@
                 <InputText @bind-Value="choosenFriend.PIN" class="form-control" id="PIN" placeholder="PIN" />
             </div>
 
-            <button type="submit" class="btn btn-success mb-2">Who's my Santa?'</button>
+            <button type="submit" class="btn btn-success mb-2">Who's my Santa?</button>
         </EditForm>
     </div>
 
     <div class="row justify-content-center mt-4" >
-        <h1 style="font-family: 'Corinthia', sans-serif; font-size: 100px; font-weight:bolder ">Il tuo Secret Santa è: @secretSantaFriend</h1>
+        <h1 style="font-family: 'Corinthia', sans-serif; font-size: 100px; font-weight:bolder ">Your Secret Santa is: @secretSantaFriend</h1>
     </div>
 </div>
 @code {
